@@ -2,6 +2,7 @@ package com.orderapi.order_api.services;
 
 import com.orderapi.order_api.entity.Product;
 import com.orderapi.order_api.repository.ProductRepository;
+import com.orderapi.order_api.validators.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,9 @@ public class ProductService {
 
     @Transactional
     public Product save(Product product){
+
+        ProductValidator.save(product);
+
         if(product.getId() == null){
             Product newProduct = productRepo.save(product);
             return newProduct;
