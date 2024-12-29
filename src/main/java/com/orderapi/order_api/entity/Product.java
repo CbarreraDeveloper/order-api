@@ -1,17 +1,15 @@
 package com.orderapi.order_api.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
+@Builder
 @Entity
-@Table(name="PRODUCTS")
+@Table(name="products")
 public class Product {
 
     @Id
