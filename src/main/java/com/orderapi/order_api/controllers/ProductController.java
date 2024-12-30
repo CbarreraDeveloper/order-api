@@ -1,5 +1,6 @@
 package com.orderapi.order_api.controllers;
 
+import com.orderapi.order_api.converter.ProductConverter;
 import com.orderapi.order_api.dtos.ProductDTO;
 import com.orderapi.order_api.entity.Product;
 import com.orderapi.order_api.services.ProductService;
@@ -17,15 +18,13 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    private ProductConverter converter = new ProductConverter();
+
     @GetMapping(value = "/products/{productId}")
     public ResponseEntity<ProductDTO> findById(@PathVariable("productId")  Long productId){
-        Product product = productService.findById(productId);
 
-        ProductDTO productDTO = ProductDTO.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .price(product.getPrice())
-                .build();
+        Product product = productService.findById(productId);
+        ProductDTO productDTO = converter.fromEntity(product);
         return new ResponseEntity<ProductDTO>(productDTO, HttpStatus.OK);
     }
 
@@ -37,41 +36,25 @@ public class ProductController {
 
     @GetMapping(value = "/products")
     public ResponseEntity<List<ProductDTO>> findAll(){
+
         List<Product> products = productService.findAll();
-
-        List<ProductDTO> dtoProducts =  products.stream().map(product -> {
-            return ProductDTO.builder()
-                    .id(product.getId())
-                    .name(product.getName())
-                    .price(product.getPrice())
-                    .build();
-        }).collect(Collectors.toList());
-
+        List<ProductDTO> dtoProducts = converter.fromEntities(products);
         return new ResponseEntity<List<ProductDTO>>(dtoProducts, HttpStatus.OK);
     }
 
    @PostMapping(value = "/products")
-   public ResponseEntity<ProductDTO> create(@RequestBody Product product){
-        Product newProduct = productService.save(product);
+   public ResponseEntity<ProductDTO> create(@RequestBody ProductDTO product){
 
-        ProductDTO productDTO = ProductDTO.builder()
-                .id(newProduct.getId())
-                .name(newProduct.getName())
-                .price(newProduct.getPrice())
-                .build();
+        Product newProduct = productService.save(converter.fromDTO(product));
+        ProductDTO productDTO = converter.fromEntity(newProduct);
         return new ResponseEntity<ProductDTO>(productDTO, HttpStatus.CREATED);
    }
 
     @PutMapping(value = "/products")
-    public ResponseEntity<ProductDTO> update(@RequestBody Product product){
-        Product updateProduct = productService.save(product);
+    public ResponseEntity<ProductDTO> update(@RequestBody ProductDTO product){
 
-        ProductDTO productDTO = ProductDTO.builder()
-                .id(updateProduct.getId())
-                .name(updateProduct.getName())
-                .price(updateProduct.getPrice())
-                .build();
-
+        Product updateProduct = productService.save(converter.fromDTO(product));
+        ProductDTO productDTO = converter.fromEntity(updateProduct);
         return new ResponseEntity<ProductDTO>(productDTO, HttpStatus.OK);
     }
 
