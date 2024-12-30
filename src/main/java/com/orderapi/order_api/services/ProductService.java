@@ -1,6 +1,7 @@
 package com.orderapi.order_api.services;
 
 import com.orderapi.order_api.entity.Product;
+import com.orderapi.order_api.exceptions.NoDataFoundException;
 import com.orderapi.order_api.repository.ProductRepository;
 import com.orderapi.order_api.validators.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,14 @@ public class ProductService {
 
     public Product findById(Long productId){
         Product product = productRepo.findById(productId)
-                .orElseThrow(() -> new RuntimeException("No existe el producto"));
+                .orElseThrow(() -> new NoDataFoundException("No existe el producto"));
         return product;
     }
 
     @Transactional
     public void delete(Long productId){
         Product product = productRepo.findById(productId)
-                .orElseThrow(() -> new RuntimeException("No existe el producto"));
+                .orElseThrow(() -> new NoDataFoundException("No existe el producto"));
         productRepo.delete(product);
     }
 
@@ -44,7 +45,7 @@ public class ProductService {
             return newProduct;
         }
         Product exitProduct = productRepo.findById(product.getId())
-                .orElseThrow(() -> new RuntimeException("No existe el producto"));
+                .orElseThrow(() -> new NoDataFoundException("No existe el producto"));
         exitProduct.setName(product.getName());
         exitProduct.setPrice(product.getPrice());
 
