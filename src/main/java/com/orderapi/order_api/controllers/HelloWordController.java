@@ -14,21 +14,4 @@ public class HelloWordController {
         return "Hello World";
     }
 
-   @GetMapping(value = "products")
-    public Product findProduct() {
-       /* Product product = new Product();
-        product.setId(1L);
-        product.setName("Product 1");
-        product.setCategorys("Category 1");*/
-
-       log.info("findProduct =>");
-        Product product = Product.builder()
-                .id(1L)
-                .name("Product 1")
-                .categorys("categoria 1")
-                .build();
-
-        return product;
-
-    }
 }

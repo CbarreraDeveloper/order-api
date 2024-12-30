@@ -1,14 +1,25 @@
 package com.orderapi.order_api.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-@Builder
+import jakarta.persistence.*;
+import lombok.*;
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@Entity
+@Table(name="products")
 public class Product {
 
+    @Id
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "NAME", nullable = false, length = 100)
     private String name;
-    private String categorys;
+
+    @Column(name = "PRICE", nullable = false)
+    private Double price;
 }
