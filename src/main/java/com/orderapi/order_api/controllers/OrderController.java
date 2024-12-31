@@ -3,7 +3,9 @@ package com.orderapi.order_api.controllers;
 import com.orderapi.order_api.converter.OrderConverter;
 import com.orderapi.order_api.dtos.OrderDTO;
 import com.orderapi.order_api.entity.Order;
+import com.orderapi.order_api.services.OrderService;
 import com.orderapi.order_api.utils.WrapperResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,23 +18,25 @@ public class OrderController {
 
     private OrderConverter converter = new OrderConverter();
 
-    @GetMapping(value = "/orders")
-    public ResponseEntity<WrapperResponse<List<OrderDTO>>> finAll(
+    @Autowired
+    private OrderService orderService;
+
+    @GetMapping(value="/orders")
+    public ResponseEntity<WrapperResponse<List<OrderDTO>>> findAll(
             @RequestParam(name = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(name = "pageSize", required = false, defaultValue = "5") int pageSize
     ){
-        Pageable page = PageRequest.of(pageNumber, pageSize);
-        List<Order> orders = null; //orderService.finAll
 
-        return new WrapperResponse(true, "success", converter.fromEntity(orders))
+        Pageable page = PageRequest.of(pageNumber, pageSize);
+        List<Order> orders = orderService.findAll(page);
+        return new WrapperResponse<>(true, "success", converter.fromEntity(orders))
                 .createResponse();
     }
 
     @GetMapping(value = "/orders/{id}")
     public ResponseEntity<WrapperResponse<OrderDTO>> findById(@PathVariable(name = "id") Long id){
 
-        Order order = null; //orderService.findById(id);
-
+        Order order = orderService.findByID(id);
 
         return new WrapperResponse(true, "succes", converter.fromEntity(order))
                 .createResponse();
@@ -60,7 +64,7 @@ public class OrderController {
 
     @DeleteMapping(value = "/orders")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id){
-        //orderService.delete(id);
+        orderService.delete(id);
         return new WrapperResponse(true, "succes", null).createResponse();
     }
 }
