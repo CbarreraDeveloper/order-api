@@ -36,7 +36,7 @@ public class OrderController {
     @GetMapping(value = "/orders/{id}")
     public ResponseEntity<WrapperResponse<OrderDTO>> findById(@PathVariable(name = "id") Long id){
 
-        Order order = orderService.findByID(id);
+        Order order = orderService.findById(id);
 
         return new WrapperResponse(true, "succes", converter.fromEntity(order))
                 .createResponse();
