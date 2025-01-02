@@ -42,27 +42,21 @@ public class OrderController {
                 .createResponse();
     }
 
-    @PostMapping(value = "/orders")
-    public ResponseEntity<WrapperResponse<OrderDTO>> create(OrderDTO order){
-
-        Order newOrder = null; //orderService.save(converter.fromDTO(order));
-
-        return new WrapperResponse(true, "succes", converter.fromEntity(newOrder))
+    @PostMapping(value="/orders")
+    public ResponseEntity<WrapperResponse<OrderDTO>> create(@RequestBody OrderDTO order){
+        Order newOrder = orderService.save(converter.fromDTO(order));
+        return new WrapperResponse<>(true, "success", converter.fromEntity(newOrder))
                 .createResponse();
-
     }
 
-    @PutMapping(value = "/orders")
-    public ResponseEntity<WrapperResponse<OrderDTO>> update(OrderDTO order){
-
-        Order newOrder = null; //orderService.save(converter.fromDTO(order));
-
-        return new WrapperResponse(true, "succes", converter.fromEntity(newOrder))
+    @PutMapping(value="/orders")
+    public ResponseEntity<WrapperResponse<OrderDTO>> update(@RequestBody OrderDTO order){
+        Order newOrder = orderService.save(converter.fromDTO(order));
+        return new WrapperResponse<>(true, "success", converter.fromEntity(newOrder))
                 .createResponse();
-
     }
 
-    @DeleteMapping(value = "/orders")
+    @DeleteMapping(value = "/orders/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id){
         orderService.delete(id);
         return new WrapperResponse(true, "succes", null).createResponse();
