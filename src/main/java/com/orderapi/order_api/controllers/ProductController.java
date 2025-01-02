@@ -21,7 +21,8 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    private ProductConverter converter = new ProductConverter();
+    @Autowired
+    private ProductConverter converter;
 
     @GetMapping(value = "/products/{productId}")
     public ResponseEntity<WrapperResponse<ProductDTO>> findById(@PathVariable("productId")  Long productId){
@@ -47,7 +48,7 @@ public class ProductController {
     ){
         Pageable page = PageRequest.of(pageNumber, pageSize);
         List<Product> products = productService.findAll(page);
-        List<ProductDTO> dtoProducts = converter.fromEntities(products);
+        List<ProductDTO> dtoProducts = converter.fromEntity(products);
 
         return new WrapperResponse(true, "success", dtoProducts)
                 .createResponse(HttpStatus.OK);
