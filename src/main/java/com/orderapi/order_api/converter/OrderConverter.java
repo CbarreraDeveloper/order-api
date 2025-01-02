@@ -4,15 +4,18 @@ import com.orderapi.order_api.dtos.OrderDTO;
 import com.orderapi.order_api.dtos.OrderLineDTO;
 import com.orderapi.order_api.entity.Order;
 import com.orderapi.order_api.entity.OrderLine;
+import lombok.AllArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 public class OrderConverter extends AbstractConverter<Order, OrderDTO> {
 
-    private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
-    private ProductConverter productConverter = new ProductConverter();
+    private DateTimeFormatter dateTimeFormat;
+    private ProductConverter productConverter;
+
 
     @Override
     public OrderDTO fromEntity(Order entity) {
