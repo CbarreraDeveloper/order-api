@@ -3,16 +3,19 @@ package com.orderapi.order_api.services;
 import com.orderapi.order_api.entity.Order;
 import com.orderapi.order_api.entity.OrderLine;
 import com.orderapi.order_api.entity.Product;
+import com.orderapi.order_api.entity.User;
 import com.orderapi.order_api.exceptions.GeneralServiceException;
 import com.orderapi.order_api.exceptions.NoDataFoundException;
 import com.orderapi.order_api.exceptions.ValidateServiceException;
 import com.orderapi.order_api.repository.OrderLineRepository;
 import com.orderapi.order_api.repository.OrderRepository;
 import com.orderapi.order_api.repository.ProductRepository;
+import com.orderapi.order_api.security.UserPrincipal;
 import com.orderapi.order_api.validators.OrderValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,6 +81,8 @@ public class OrderService {
 
             OrderValidator.save(order);
 
+            User user = UserPrincipal.getCurrentUser();
+
             double total = 0;
             for(OrderLine line : order.getLines()) {
                 Product product = productRepo.findById(line.getProduct().getId())
@@ -92,7 +97,7 @@ public class OrderService {
             order.getLines().forEach(line -> line.setOrder(order));
 
             if(order.getId() == null) {
-
+                order.setUser(user);
                 order.setRegDate(LocalDateTime.now());
                 return orderRepo.save(order);
             }

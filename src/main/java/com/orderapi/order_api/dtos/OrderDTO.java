@@ -1,5 +1,6 @@
 package com.orderapi.order_api.dtos;
 
+import com.orderapi.order_api.entity.User;
 import lombok.*;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public class OrderDTO {
     private String regDate;
     private List<OrderLineDTO> lines;
     private Double total;
+    private UserDTO user;
 }

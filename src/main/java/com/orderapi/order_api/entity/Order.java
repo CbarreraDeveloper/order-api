@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.mapping.Join;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,6 +33,10 @@ public class Order {
 
     @Column(name="TOTAL", nullable = false)
     private Double total;
+
+    @ManyToOne
+    @JoinColumn(name="FK_USER", updatable = false)
+    private User user;
 
     @Override
     public int hashCode() {
