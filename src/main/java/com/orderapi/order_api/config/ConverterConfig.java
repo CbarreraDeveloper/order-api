@@ -2,6 +2,7 @@ package com.orderapi.order_api.config;
 
 import com.orderapi.order_api.converter.OrderConverter;
 import com.orderapi.order_api.converter.ProductConverter;
+import com.orderapi.order_api.converter.UserConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,11 @@ public class ConverterConfig {
     @Bean
     public OrderConverter getOrderConverter() {
         DateTimeFormatter format = DateTimeFormatter.ofPattern(datetimeFormat);
-        return new OrderConverter(format, getProductConverter());
+        return new OrderConverter(format, getProductConverter(), getUserConverter());
+    }
+
+    @Bean
+    public UserConverter getUserConverter() {
+        return new UserConverter();
     }
 }

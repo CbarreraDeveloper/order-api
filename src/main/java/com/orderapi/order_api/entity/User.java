@@ -1,42 +1,28 @@
 package com.orderapi.order_api.entity;
-import java.time.LocalDateTime;
-import java.util.List;
+
+import lombok.*;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.mapping.Join;
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name="ORDERS")
-public class Order {
+@Table(name="USERS")
+public class User {
 
     @Id
     @Column(name="ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="REG_DATE", nullable = false, updatable = false)
-    private LocalDateTime regDate;
+    @Column(name="USERNAME", length = 30, nullable = false)
+    private String username;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderLine> lines;
-
-    @Column(name="TOTAL", nullable = false)
-    private Double total;
-
-    @ManyToOne
-    @JoinColumn(name="FK_USER", updatable = false)
-    private User user;
+    @Column(name="PASSWORD", nullable = false, length = 150)
+    private String password;
 
     @Override
     public int hashCode() {
@@ -54,7 +40,7 @@ public class Order {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Order other = (Order) obj;
+        User other = (User) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -62,4 +48,5 @@ public class Order {
             return false;
         return true;
     }
+
 }
