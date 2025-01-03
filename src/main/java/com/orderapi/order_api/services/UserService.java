@@ -38,7 +38,7 @@ public class UserService {
             User existUser = userRepo.findByUsername(user.getUsername())
                     .orElse(null);
 
-            if(existUser != null) throw new ValidateServiceException("El nombre de usuario ya existe");
+            if (existUser != null) throw new ValidateServiceException("El nombre de usuario ya existe");
 
             return userRepo.save(user);
         } catch (ValidateServiceException | NoDataFoundException e) {
@@ -55,7 +55,8 @@ public class UserService {
             User user = userRepo.findByUsername(request.getUsername())
                     .orElseThrow(() -> new ValidateServiceException("Usuario o password incorrectos"));
 
-            if(! user.getPassword().equals(request.getPassword())) throw new ValidateServiceException("Usuario o password incorrectos");
+            if (!user.getPassword().equals(request.getPassword()))
+                throw new ValidateServiceException("Usuario o password incorrectos");
 
             String token = createToken(user);
             return new LoginResponseDTO(userConverter.fromEntity(user), token);
@@ -70,7 +71,7 @@ public class UserService {
 
     public String createToken(User user) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + (1000*60*60));
+        Date expiryDate = new Date(now.getTime() + (1000 * 60 * 60));
 
         return Jwts.builder()
                 .setSubject(user.getUsername())
@@ -84,16 +85,26 @@ public class UserService {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
-        }catch (UnsupportedJwtException e) {
+        } catch (UnsupportedJwtException e) {
             log.error("JWT in a particular format/configuration that does not match the format expected");
-        }catch (MalformedJwtException e) {
+        } catch (MalformedJwtException e) {
             log.error(" JWT was not correctly constructed and should be rejected");
-        }catch (SignatureException e) {
+        } catch (SignatureException e) {
             log.error("Signature or verifying an existing signature of a JWT failed");
-        }catch (ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             log.error("JWT was accepted after it expired and must be rejected");
         }
         return false;
+    }
+
+    public String getUsernameFromToken(String jwt) {
+        try {
+            return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt).getBody().getSubject();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ValidateServiceException("Invalid Token");
+        }
+
     }
 
 }
