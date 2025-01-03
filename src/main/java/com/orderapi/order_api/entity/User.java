@@ -1,7 +1,8 @@
 package com.orderapi.order_api.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
